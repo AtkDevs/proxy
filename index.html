@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Proxy</title>
+    <!-- Estilos e scripts necessários -->
+</head>
+
+<body>
+    <h1>Gerador de Proxy</h1>
+
+    <div class="container">
+        <div class="proxy-generator">
+            <form id="proxyForm">
+                <label for="usuario_proxy">Usuário da Proxy:</label>
+                <input type="text" id="usuario_proxy" name="usuario_proxy" placeholder="Insira seu usuário" required>
+
+                <label for="senha_proxy">Senha da Proxy:</label>
+                <input type="text" id="senha_proxy" name="senha_proxy" placeholder="Insira sua senha" required>
+
+                <label for="regiao">Selecione a região:</label>
+                <select id="regiao" name="regiao" required>
+                    <option value="ALEATORIO">Aleatório</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <!-- Adicione mais opções conforme necessário -->
+                </select>
+
+                <label for="tipo_proxy">Selecione o tipo de proxy:</label>
+                <select id="tipo_proxy" name="tipo_proxy">
+                    <option value="http">HTTP/HTTPS</option>
+                    <option value="socks5">SOCKS5</option>
+                    <!-- Adicione mais opções conforme necessário -->
+                </select>
+
+                <button type="submit">Gerar Proxy</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('proxyForm');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const usuario = document.getElementById('usuario_proxy').value;
+            const senha = document.getElementById('senha_proxy').value;
+            const regiao = document.getElementById('regiao').value;
+            const tipoProxy = document.getElementById('tipo_proxy').value;
+
+            const requestData = {
+                usuario,
+                senha,
+                regiao,
+                tipoProxy
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/generate-proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao gerar proxy');
+                }
+
+                const data = await response.json();
+                console.log('Resposta do servidor:', data);
+                // Manipule a resposta como necessário (por exemplo, atualizando a UI)
+            } catch (error) {
+                console.error('Erro ao enviar requisição:', error);
+                // Trate o erro conforme necessário (por exemplo, exibindo uma mensagem de erro na UI)
+            }
+        });
+    </script>
+</body>
+
+</html>
